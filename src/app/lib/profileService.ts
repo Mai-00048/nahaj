@@ -19,7 +19,7 @@ export class ProfileService {
       return { success: true, error: null };
     } catch (error) {
       console.error('Update profile error:', error);
-      return { success: false, error: 'حدث خطأ أثناء تحديث الملف الشخصي' };
+      return { success: false, error: 'Error updating profile' };
     }
   }
 
@@ -36,11 +36,11 @@ export class ProfileService {
         .single();
 
       if (fetchError || !user) {
-        return { success: false, error: 'المستخدم غير موجود' };
+        return { success: false, error: 'User not found' };
       }
 
       if (user.password !== currentPassword) {
-        return { success: false, error: 'كلمة المرور الحالية غير صحيحة' };
+        return { success: false, error: 'Current password is incorrect' };
       }
 
       const { error: updateError } = await supabase
@@ -55,7 +55,7 @@ export class ProfileService {
       return { success: true, error: null };
     } catch (error) {
       console.error('Update password error:', error);
-      return { success: false, error: 'حدث خطأ أثناء تحديث كلمة المرور' };
+      return { success: false, error: 'Error updating password' };
     }
   }
 
@@ -74,7 +74,7 @@ export class ProfileService {
       return { data, error: null };
     } catch (error) {
       console.error('Get profile error:', error);
-      return { data: null, error: 'حدث خطأ أثناء جلب بيانات الملف الشخصي' };
+      return { data: null, error: 'Error fetching profile data' };
     }
   }
 }

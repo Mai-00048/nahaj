@@ -12,7 +12,7 @@ export class AuthService {
         .single();
 
       if (userError || !user) {
-        return { user: null, session: null, error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
+        return { user: null, session: null, error: 'Email or password is incorrect' };
       }
 
       const expiresAt = new Date();
@@ -28,13 +28,13 @@ export class AuthService {
         .single();
 
       if (sessionError) {
-        return { user: null, session: null, error: 'حدث خطأ أثناء إنشاء الجلسة' };
+        return { user: null, session: null, error: 'Error creating session' };
       }
 
       return { user, session, error: null };
     } catch (error) {
       console.error('Login error:', error);
-      return { user: null, session: null, error: 'حدث خطأ غير متوقع' };
+      return { user: null, session: null, error: 'Unexpected error occurred' };
     }
   }
 
@@ -81,4 +81,38 @@ export class AuthService {
       return false;
     }
   }
+
+  static async changePassword(
+  email: string,
+  oldPassword: string,
+  newPassword: string
+): Promise<{ success: boolean; error: string | null }> {
+  try {
+     const { data: user, error: userError } = await supabase
+      .from('admin_users')
+      .select('*')
+      .eq('email', email)
+      .eq('password', oldPassword)
+      .single();
+
+    if (userError || !user) {
+      return { success: false, error: 'Old password is incorrect' };
+    }
+
+    const { error: updateError } = await supabase
+      .from('admin_users')
+      .update({ password: newPassword })
+      .eq('id', user.id);
+
+    if (updateError) {
+      return { success: false, error: 'Error updating password' };
+    }
+
+    return { success: true, error: null };
+  } catch (error) {
+    console.error('Change password error:', error);
+    return { success: false, error: 'Unexpected error occurred' };
+  }
+}
+
 }

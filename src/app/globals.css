@@ -13,8 +13,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0; /* لو تريد شفاف يمكن تغييره */
-    --background-end-rgb: 0, 0, 0;   /* لو تريد شفاف يمكن تغييره */
+    --background-start-rgb: 0, 0, 0; 
+    --background-end-rgb: 0, 0, 0;  
   }
 }
 
@@ -23,9 +23,9 @@ body {
   background: linear-gradient(
       to bottom,
       transparent,
-      transparent  /* بدل rgb(var(--background-end-rgb)) */
+      transparent 
     )
-    transparent; /* بدل rgb(var(--background-start-rgb)) */
+    transparent; 
   font-family: 'Tajawal', sans-serif;
 }
 

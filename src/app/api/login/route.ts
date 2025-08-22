@@ -1,3 +1,15 @@
+// API route handling user authentication:
+// POST - Logs in a user:
+//   - Expects 'email' and 'password' in request body.
+//   - Validates credentials via AuthService.
+//   - Sets 'sessionId' cookie if login succeeds.
+//   - Returns 400 if missing data, 401 if invalid credentials, 500 on server error.
+// DELETE - Logs out a user:
+//   - Reads 'sessionId' from cookies and invalidates the session.
+//   - Clears the 'sessionId' cookie.
+//   - Returns 500 on server error.
+
+
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthService } from '../../lib/auth';
 
@@ -7,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'البريد الإلكتروني وكلمة المرور مطلوبان' },
+        { error: 'password is required' },
         { status: 400 }
       );
     }
@@ -16,13 +28,13 @@ export async function POST(request: NextRequest) {
 
     if (error || !user || !session) {
       return NextResponse.json(
-        { error: error || 'فشل تسجيل الدخول' },
+        { error: error || 'Invalid credentials' },
         { status: 401 }
       );
     }
 
     const response = NextResponse.json({
-      message: 'تم تسجيل الدخول بنجاح',
+      message: 'Login successful',
       user: {
         id: user.id,
         email: user.email,
@@ -43,7 +55,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Login API error:', error);
     return NextResponse.json(
-      { error: 'حدث خطأ أثناء تسجيل الدخول' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -57,7 +69,7 @@ export async function DELETE(request: NextRequest) {
       await AuthService.logout(sessionId);
     }
 
-    const response = NextResponse.json({ message: 'تم تسجيل الخروج بنجاح' });
+    const response = NextResponse.json({ message: 'Logout successful' });
     response.cookies.set('sessionId', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -69,7 +81,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error('Logout API error:', error);
     return NextResponse.json(
-      { error: 'حدث خطأ أثناء تسجيل الخروج' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

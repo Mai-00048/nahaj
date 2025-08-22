@@ -16,7 +16,7 @@ export class ContentService {
       return { data, error: null };
     } catch (error) {
       console.error('Get sections error:', error);
-      return { data: null, error: 'حدث خطأ أثناء جلب البيانات' };
+      return { data: null, error: 'Error fetching sections' };
     }
   }
 
@@ -35,7 +35,7 @@ export class ContentService {
       return { data, error: null };
     } catch (error) {
       console.error('Get section error:', error);
-      return { data: null, error: 'حدث خطأ أثناء جلب القسم' };
+      return { data: null, error: 'Error fetching section' };
     }
   }
 
@@ -54,7 +54,7 @@ export class ContentService {
       return { data, error: null };
     } catch (error) {
       console.error('Create section error:', error);
-      return { data: null, error: 'حدث خطأ أثناء إنشاء القسم' };
+      return { data: null, error: 'Error creating section' };
     }
   }
 
@@ -74,7 +74,7 @@ export class ContentService {
       return { data, error: null };
     } catch (error) {
       console.error('Update section error:', error);
-      return { data: null, error: 'حدث خطأ أثناء تحديث القسم' };
+      return { data: null, error: 'Error updating section' };
     }
   }
 
@@ -92,7 +92,7 @@ export class ContentService {
       return { success: true, error: null };
     } catch (error) {
       console.error('Delete section error:', error);
-      return { success: false, error: 'حدث خطأ أثناء حذف القسم' };
+      return { success: false, error: 'Error deleting section' };
     }
   }
 }

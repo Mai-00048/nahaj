@@ -1,5 +1,11 @@
+// API route to verify user authentication via session cookie.
+// - Retrieves 'sessionId' from request cookies.
+// - Returns 401 if no session or session is invalid.
+// - Returns 200 with user data if session is valid.
+
+
 import { NextRequest, NextResponse } from 'next/server';
-import { AuthService } from '../../../lib/auth'; // المسار صحيح من داخل /app/api/auth/me/route.ts
+import { AuthService } from '../../../lib/auth'; 
 
 export async function GET(request: NextRequest) {
   const sessionId = request.cookies.get('sessionId')?.value;

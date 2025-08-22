@@ -8,9 +8,9 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import './hero.css';
 
- 
-
+// Hero/Top section of the website showcasing slides and main titles
 export default function Hero() {
+  // Array of slides for the Swiper carousel
   const slides = [
     {
       image: 'https://img.jakpost.net/c/2019/01/28/2019_01_28_64132_1548670481._large.jpg',
@@ -45,14 +45,20 @@ export default function Hero() {
   ];
 
   return (
-    <section className="py-8 md:py-16 bg-white text-center" style={{ fontFamily: 'Tajawal, sans-serif' }}>
+    <section
+      className="py-8 md:py-16 bg-white text-center"
+      style={{ fontFamily: 'Tajawal, sans-serif' }}
+    >
+      {/* Container for title and subtitle */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main title */}
         <motion.h1
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#4A2B0F] mb-4"
         >
           OMAN 2040
         </motion.h1>
 
+        {/* Subtitle (English) */}
         <motion.p
           className="text-base sm:text-lg md:text-xl text-gray-600 mb-2"
           initial={{ opacity: 0 }}
@@ -61,6 +67,8 @@ export default function Hero() {
         >
           Building the future through culture, technology and vision
         </motion.p>
+
+        {/* Subtitle (Arabic) */}
         <motion.p
           className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 text-center"
           initial={{ opacity: 0 }}
@@ -69,6 +77,8 @@ export default function Hero() {
         >
           بناء المستقبل من خلال الثقافة والتكنولوجيا والرؤية
         </motion.p>
+
+        {/* Swiper carousel container */}
         <div className="relative px-0 sm:px-4">
           <Swiper
             modules={[Pagination, Navigation]}
@@ -81,32 +91,29 @@ export default function Hero() {
               dynamicBullets: true,
             }}
             breakpoints={{
-              640: {
-                slidesPerView: 1,
-                spaceBetween: 10,
-              },
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: -100,
-              },
+              640: { slidesPerView: 1, spaceBetween: 10 },
+              768: { slidesPerView: 2, spaceBetween: 20 },
+              1024: { slidesPerView: 3, spaceBetween: -100 },
             }}
             className="hero-swiper"
           >
+            {/* Map through slides to render each SwiperSlide */}
             {slides.map((slide, index) => (
               <SwiperSlide key={index}>
                 <div className="slide-container">
+                  {/* Slide background image */}
                   <img
                     src={slide.image}
                     alt={slide.title}
                     className="slide-image"
                   />
+
+                  {/* Gradient overlay for each slide */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${slide.gradient} opacity-40 rounded-3xl`}
                   ></div>
+
+                  {/* Optional slide content (title and description) */}
                   {(slide.title || slide.description) && (
                     <div className="slide-content">
                       {slide.title && (
