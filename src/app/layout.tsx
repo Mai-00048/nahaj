@@ -23,7 +23,8 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
   <body className={tajawal.className}>
-    <Navbar />
+   <Navbar sidebarExpanded={false} />
+
     <main className="min-h-screen pt-16">
       {children}
     </main>
