@@ -4,6 +4,12 @@
 https://mai-alkalbani-test.netlify.app/
 
 
+Admin login:
+admin@mai.om
+pass:
+12345
+
+
 
 # 📁 Vision 2030 Project - Setup Guide
 
