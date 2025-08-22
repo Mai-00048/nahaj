@@ -1,83 +1,99 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { FiLogIn, FiLogOut, FiHome, FiFlag, FiBriefcase, FiMail } from 'react-icons/fi';
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+interface HeaderProps {
+  sidebarExpanded: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ sidebarExpanded }) => {
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname(); 
+
+  const refreshAuth = async () => {
+    try {
+      const res = await fetch('/api/auth/me', { cache: 'no-store' });
+      setIsAdminLoggedIn(res.ok);
+    } catch {
+      setIsAdminLoggedIn(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshAuth();
+    const handler = () => refreshAuth();
+    window.addEventListener('auth-changed', handler);
+    return () => window.removeEventListener('auth-changed', handler);
+  }, []);
+
+  const handleLogout = async () => {
+    const sessionId = localStorage.getItem('sessionId');
+    if (sessionId) {
+      await fetch('/api/auth', { method: 'DELETE' });
+      localStorage.removeItem('sessionId');
+    }
+    window.dispatchEvent(new Event('auth-changed'));
+    router.push('/');
+  };
+
+  const showLogout = isAdminLoggedIn && pathname.startsWith('/dashboard');
 
   return (
-    <nav className="bg-white shadow-lg fixed w-full top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-blue-600">رؤية 2030</span>
-            </Link>
-          </div>
+    <header
+      className={`bg-gray-100/90 backdrop-blur-lg p-1 sm:p-2 flex items-center justify-between gap-2 sm:gap-4 border-b border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)]
+      rounded-lg sm:rounded-xl fixed top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-50
+      w-[calc(100%-2rem)] md:${sidebarExpanded ? 'w-2/3' : 'w-4/5'} transition-all duration-300`}
+    >
+      <div className="flex items-center gap-2 flex-shrink-0 font-bold text-black text-sm sm:text-lg">
+  <Link href="/">
+    V I S I O Nx.
+  </Link>
+</div>
 
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-              الرئيسية
-            </Link>
-            <Link href="/#goals" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-              الأهداف
-            </Link>
-            <Link href="/#projects" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-              المشاريع
-            </Link>
-            <Link href="/#contact" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-              اتصل بنا
-            </Link>
-            <Link 
-              href="/login" 
-              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition duration-300"
-            >
-              دخول المدير
-            </Link>
-          </div>
+      <nav className="flex-1 flex justify-center gap-1 sm:gap-3 font-medium">
+        <Link href="/" className="group bg-gray-200/50 shadow-sm rounded-full px-1 sm:px-3 py-1 flex items-center gap-1.5 transition-colors duration-200 text-gray-700 hover:bg-gray-300/50">
+          <span className="hidden sm:inline">Home</span>
+          <div className="bg-white/70 rounded-full p-1"><FiHome className="w-4 h-4" /></div>
+        </Link>
+        <Link href="/#goals" className="group bg-gray-200/50 shadow-sm rounded-full px-1 sm:px-3 py-1 flex items-center gap-1.5 transition-colors duration-200 text-gray-700 hover:bg-gray-300/50">
+          <span className="hidden sm:inline">Goals</span>
+          <div className="bg-white/70 rounded-full p-1"><FiFlag className="w-4 h-4" /></div>
+        </Link>
+        <Link href="/#projects" className="group bg-gray-200/50 shadow-sm rounded-full px-1 sm:px-3 py-1 flex items-center gap-1.5 transition-colors duration-200 text-gray-700 hover:bg-gray-300/50">
+          <span className="hidden sm:inline">Projects</span>
+          <div className="bg-white/70 rounded-full p-1"><FiBriefcase className="w-4 h-4" /></div>
+        </Link>
+        <Link href="/#contact" className="group bg-gray-200/50 shadow-sm rounded-full px-1 sm:px-3 py-1 flex items-center gap-1.5 transition-colors duration-200 text-gray-700 hover:bg-gray-300/50">
+          <span className="hidden sm:inline">Contact Us</span>
+          <div className="bg-white/70 rounded-full p-1"><FiMail className="w-4 h-4" /></div>
+        </Link>
+      </nav>
 
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 focus:outline-none"
-            >
-              <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {isOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
+      <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+        {showLogout ? (
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 rounded-full text-red-600 bg-red-50 hover:bg-red-100 font-medium transition-colors duration-300"
+          >
+            <FiLogOut className="w-4 h-4" />
+            <span className="hidden sm:inline">Logout</span>
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 rounded-full text-blue-600 bg-blue-50 hover:bg-blue-100 font-medium transition-colors duration-300"
+          >
+            <FiLogIn className="w-4 h-4" />
+            <span className="hidden sm:inline">Login</span>
+          </Link>
+        )}
       </div>
-
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
-            <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600">
-              الرئيسية
-            </Link>
-            <Link href="/#goals" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600">
-              الأهداف
-            </Link>
-            <Link href="/#projects" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600">
-              المشاريع
-            </Link>
-            <Link href="/#contact" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600">
-              اتصل بنا
-            </Link>
-            <Link 
-              href="/login" 
-              className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 bg-blue-50 hover:bg-blue-100"
-            >
-              دخول المدير
-            </Link>
-          </div>
-        </div>
-      )}
-    </nav>
+    </header>
   );
-}
+};
+
+export default Header;

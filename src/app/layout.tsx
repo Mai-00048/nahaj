@@ -11,8 +11,8 @@ const tajawal = Tajawal({
 });
 
 export const metadata: Metadata = {
-  title: 'رؤية المملكة العربية السعودية 2030',
-  description: 'نحو اقتصاد مزدهر ومجتمع حيوي ووطن طموح',
+  title: 'OMAN VISION 2040',
+  description: 'A comprehensive plan for the future of Oman.',
 };
 
 export default function RootLayout({
@@ -22,13 +22,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={tajawal.className}>
-        <Navbar />
-        <main className="min-h-screen pt-16">
-          {children}
-        </main>
-        <Footer />
-      </body>
-    </html>
+  <body className={tajawal.className}>
+    <Navbar />
+    <main className="min-h-screen pt-16">
+      {children}
+    </main>
+    <Footer />
+  </body>
+</html>
+
   );
 }
